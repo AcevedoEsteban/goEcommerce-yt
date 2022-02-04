@@ -14,41 +14,41 @@ type User struct {
 	Phone 				*string
 	Token				*string
 	Refresh_token		*string
-	Create_At			*string
-	Update_At			
-	User_ID
-	UserCart
-	Address_details
-	Order_Status
+	Create_At			time.Time
+	Update_At			time.Time
+	User_ID				*string
+	UserCart			[]ProductUser
+	Address_details		[]Address
+	Order_Status		[]Order
 
 }
 
 type Product struct{
-Product_ID
-Product_Name
-Price
-Rating
-Image
+Product_ID			primitive.ObjectID
+Product_Name		*string
+Price				*uint16
+Rating				*uint8
+Image				*string
 }
 
 type ProductUser struct{
-Product_ID
-Product_Name
-Price
-Rating
-Image
+Product_ID			primitive.ObjectID
+Product_Name		*string
+Price				int
+Rating				*uint
+Image				*string
 }
 
 type Address struct{
-	Address_ID
-	House 
-	Street
-	City
-	Pincode
+	Address_ID			primitive.ObjectID
+	House 				*string
+	Street				*string
+	City				*string
+	Pincode				*string
 }
 
 type Order struct{
-	Order_ID
+	Order_ID			primitive.ObjectID
 	Order_Cart
 	Order_Status
 	Price
