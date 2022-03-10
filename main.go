@@ -17,7 +17,7 @@ func main() {
 		port = "8000"
 	}
 
-	app := controllers.NewApplication(database.Client, "Products"), database.UserData(database.Client, "Users")
+	app := controllers.NewApplication(database.ProductsData(database.Client, "Products"), database.UserData(database.Client, "Users"))
 
 	router := gin.New()
 	router.Use(gin.Logger())
