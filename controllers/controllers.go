@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/AcevedoEsteban/goEcommerce-yt/models"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -54,6 +55,18 @@ func SignUp() gin.HandlerFunc {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "this phone no. is already in users"})
 			return
 		}
+		password := HashPassword(*user.Password)
+		user.Password = &password
+		user.Created_At, _ = time.Parse(time.RFC3339, time.Now().Format(time.RFC3339))
+		user.Update_At, _ = time.Parse(time.RFC3339, time.Now().Format(time.RFC3339))
+		user.ID_At = primitive.NewObjectID()
+		user.User_ID = user.ID.Hex()
+		token, refreshtoken, _ := generate.TokenGenerator(user.Email)
+		user.Token
+		user,Refresh_Token
+		user.UserCart
+		user.Address_Details
+		user.Order_Status
 	}
 }
 
