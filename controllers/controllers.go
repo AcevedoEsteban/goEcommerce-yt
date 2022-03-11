@@ -68,15 +68,28 @@ func SignUp() gin.HandlerFunc {
 		user.UserCart = make([]models.ProductUser, 0)
 		user.Address_Details = make([]models.Address, 0)
 		user.Order_Status = make([]models.OrderStatus, 0)
-		// capture all this inserted data into a the database 
-		_, inserterr := UserCollection.InsertOne(ctx,user)
+		// capture all this inserted data into a the database
+		_, inserterr := UserCollection.InsertOne(ctx, user)
 		if inserterr != nil {
-			cJSON(http.StatusInternalServerError, gin.H{"error" : "the user did not get created"})
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "the user did not get created"})
+			return
 		}
+		defer cancel()
+		c.JSON(http.StatusCreated, "succesfully signed in :)")
 	}
 }
 
 func Login() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
+		defer cancel()
+
+		var user models.User
+	if err := c.BIND_JSO(&user); err != nil{
+		c.JSON(http.StatusBadRequest, gin.H{"error" : err})
+		return
+	}
+	}
 
 }
 
