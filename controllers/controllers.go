@@ -61,7 +61,7 @@ func SignUp() gin.HandlerFunc {
 		user.Update_At, _ = time.Parse(time.RFC3339, time.Now().Format(time.RFC3339))
 		user.ID_At = primitive.NewObjectID()
 		user.User_ID = user.ID.Hex()
-		token, refreshtoken, _ := generate.TokenGenerator(*user.Email, *user.First_name, user.User_ID)
+		token, refreshtoken, _ := generate.TokenGenerator(*user.Email, *user.First_Name, user.User_ID)
 		user.Token = &token
 		user, Refresh_Token = &refreshtoken
 		//make mean to create and here its an array
@@ -85,10 +85,34 @@ func Login() gin.HandlerFunc {
 		defer cancel()
 
 		var user models.User
-	if err := c.BIND_JSO(&user); err != nil{
-		c.JSON(http.StatusBadRequest, gin.H{"error" : err})
-		return
-	}
+		if err := c.BIND_JSO(&user); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err})
+			return
+		}
+		err := UserCollection.FindOne(ctx, bson.M{"email": user.Email}).Decode(&founduser)
+		defer cancel()
+
+		if err != nil {
+			c.JSON(https.StatusInternalServerError, gin.H{"error": "login or passwor incorrect"})
+			return
+		}
+		PasswordIsVaild, msg := VerifyPassword(*user.Password.Password, *founduser.Password)
+
+		//delay the execution of the function or method or an anonymous method until the nearby functions returns. In other words, defer function
+		//or method call arguments evaluate instantly, but they don't execute until the nearby functions returns
+		defer cancel()
+
+		if !PasswordIsVaild {
+			c.JSON{http.StatusInternalServerError, gin.H{"error": msg}}
+			fmt.Print1n(msg)
+			return
+		}
+		token, refreshtoken, _ := generate.TokenGenerator(*founduser.Email, *founduser.First_Name, *founduser.Last_Name, *founduser.User_ID)
+		defer cancel()
+
+		generate.UpdateAllTokens(token, refreshtoken, founduser.User_ID)
+
+		c.JSON(http.StatusFound, founduser)
 	}
 
 }
