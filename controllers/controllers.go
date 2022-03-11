@@ -61,12 +61,18 @@ func SignUp() gin.HandlerFunc {
 		user.Update_At, _ = time.Parse(time.RFC3339, time.Now().Format(time.RFC3339))
 		user.ID_At = primitive.NewObjectID()
 		user.User_ID = user.ID.Hex()
-		token, refreshtoken, _ := generate.TokenGenerator(user.Email)
-		user.Token
-		user,Refresh_Token
-		user.UserCart
-		user.Address_Details
-		user.Order_Status
+		token, refreshtoken, _ := generate.TokenGenerator(*user.Email, *user.First_name, user.User_ID)
+		user.Token = &token
+		user, Refresh_Token = &refreshtoken
+		//make mean to create and here its an array
+		user.UserCart = make([]models.ProductUser, 0)
+		user.Address_Details = make([]models.Address, 0)
+		user.Order_Status = make([]models.OrderStatus, 0)
+		// capture all this inserted data into a the database 
+		_, inserterr := UserCollection.InsertOne(ctx,user)
+		if inserterr != nil {
+			cJSON(http.StatusInternalServerError, gin.H{"error" : "the user did not get created"})
+		}
 	}
 }
 
