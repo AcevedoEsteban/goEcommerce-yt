@@ -1,10 +1,13 @@
 package controllers
 
 import (
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"errors"
 	"log"
 	"net/http"
-
+	"context"
+	"go.mongodb.org/mongo-driver/mongo/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -26,9 +29,19 @@ func (app *Application) AddToCart() gin.Handler {
 		if productQueryID == "" {
 			log.Println("product id is empty")
 
-			c.AbortWithError(http.StatusBadRequest, errors.New("product id is empty"))
+		_ =	c.AbortWithError(http.StatusBadRequest, errors.New("product id is empty"))
+		return
 		}
-	}
+
+	protductID, err :=	primitive.ObjectIDFromHex(productQueryID)
+
+	if err!= nil{
+		log.Println(err)
+		c.AbortWithStatus(http.StatusInternalServerError)
+		return
+		}
+
+		var ctx, cancel = context.WithTimeOut(context.Background())
 }
 
 func RemoveItem() gin.HandlerFunc {
