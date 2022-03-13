@@ -104,7 +104,7 @@ func Login() gin.HandlerFunc {
 
 		if !PasswordIsVaild {
 			c.JSON{http.StatusInternalServerError, gin.H{"error": msg}}
-			fmt.Print1n(msg)
+			fmt.Println(msg)
 			return
 		}
 		token, refreshtoken, _ := generate.TokenGenerator(*founduser.Email, *founduser.First_Name, *founduser.Last_Name, *founduser.User_ID)
