@@ -5,11 +5,18 @@ import (
 	"log"
 	"net/http"
 	"time"
-
+	"github.com/go-playground/validator/v10"
 	"github.com/AcevedoEsteban/goEcommerce-yt/models"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"gopkg.in/mgo.v2/bson"
+	"go.mongodb.org/mongo-driver/mongo/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 )
+
+var UserCollecton *mongo.Collection =
+var ProductCollecton =
+var Validate = validator.New()
 
 func HashPassword(password string) string {
 
