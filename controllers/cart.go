@@ -109,8 +109,24 @@ func GetItemFromCart() gin.HandlerFunc {
 
 }
 
-func BuyFromCart() gin.HandlerFunc {
+func (app *Application)BuyFromCart() gin.HandlerFunc {
+	return func(c *Application){
+		userQueryID := c.Query("id")
+		if userQueryID == ""{
+			log.Panicln("user id is empty")
+			c.AbortWithError(http.StatusBadRequest, errors.New("user id is empty"))
+		}
 
+		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
+		
+		defer cancel()
+
+		err := database.BuyItemFromCart(ctx, app.Collection, userQueryID)
+		if err! = nil {
+			c.IndentedJSON(http.StatusInternalServerError, err)
+			c.IndentedJSON("successfully added item to cart")
+		}
+	}
 }
 
 func (app *Application) InstantBuy() gin.HandlerFunc {
@@ -149,6 +165,6 @@ return func (c *gin.Context){
 		if err != nil {
 			c.IndentedJSON(http.StatusInternalServerError, err)
 		}
-		c.IndentedJSON(200, "successfully ORDER placed ")
+		c.IndentedJSON(200, "successfully ORDER placed")
 }
 }
