@@ -177,5 +177,6 @@ func SearchProduct() gin.HandleFunc {
 }
 
 func SearchProductByQuery() gin.HandlerFunc {
+	return func(c *gin.Context)
 
 }
